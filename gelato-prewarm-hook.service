@@ -1,0 +1,20 @@
+[Unit]
+Description=Gelato pre-warm webhook receiver (event-driven next-episode warm)
+After=network-online.target docker.service
+Wants=network-online.target
+
+[Service]
+Type=simple
+ExecStart=/usr/bin/python3 %h/scripts/gelato-prewarm-hook.py
+Environment=JF_BASE=http://<JELLYFIN_HOST>:8096
+Environment=JF_KEY=<JELLYFIN_API_KEY>
+Environment=HOOK_PORT=8800
+Environment=LOG_DIR=%h/gelato-prewarm/logs
+Environment=STATE_DIR=%h/gelato-prewarm/state
+Restart=on-failure
+RestartSec=5
+StandardOutput=append:%h/gelato-prewarm/logs/service.log
+StandardError=append:%h/gelato-prewarm/logs/service.err
+
+[Install]
+WantedBy=default.target
