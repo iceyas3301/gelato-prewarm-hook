@@ -13,7 +13,7 @@ Jellyfin (Webhook plugin) --Playback Start POST--> receiver :8800 --POST /Items/
 ```
 
 - Receiver: pure-Python `http.server`, no dependencies beyond stdlib.
-- Runs as a systemd user service; independent of other local services, survives reboots.
+- Runs as a systemd user service; survives reboots.
 - Requires the official [jellyfin/jellyfin-plugin-webhook](https://github.com/jellyfin/jellyfin-plugin-webhook) plugin on Jellyfin.
 
 ## Install
@@ -41,6 +41,10 @@ systemctl --user daemon-reload
 systemctl --user enable --now gelato-prewarm-hook.service
 curl http://127.0.0.1:8800/   # -> "gelato-prewarm-hook alive"
 ```
+
+The unit writes logs and dedup state under `%h/gelato-prewarm/{logs,state}` (`%h` = your
+home directory; the script's own defaults use `~/gelato-prewarm/...`). Override with the
+`LOG_DIR` / `STATE_DIR` environment variables if you keep things elsewhere.
 
 ### 3. Webhook configuration (API only, no dashboard)
 
